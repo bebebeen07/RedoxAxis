@@ -173,3 +173,60 @@ The pipeline will automatically detect and parse the following file types:
 
 Ensure your source files maintain uniform primary keys, such as UniProt Accession IDs, to guarantee accurate cross-dataset merging and cleaning.
 
+
+## Limitations and Known Issues
+
+### 1. Feature Redundancy (Cross-Feature Overlap)
+Although features are organized into different biological categories, there exists significant redundancy across modules.
+
+- Pathway features and functional annotation features may encode overlapping biological signals
+- Semantic embeddings may re-encode structured metadata such as EC numbers, GO terms, and pathway labels
+- Tissue, pathway, and function-based features are not guaranteed to be statistically independent
+
+➡️ Therefore, the current feature space should be considered a **high-dimensional redundant representation**, not a strictly orthogonal feature system.
+
+---
+
+### 2. Structural Separation vs Statistical Independence
+Feature grouping in this pipeline is based on **data source and biological intuition**, not statistical decorrelation.
+
+- No whitening, PCA decorrelation, or ICA-based independence enforcement is applied between feature blocks
+- Feature categories are separated at the schema level only (heading-level separation)
+- Cross-feature dependencies are preserved by design
+
+➡️ As a result, downstream models may experience **feature importance inflation due to duplicated biological signals across modules**.
+
+---
+
+### 3. Embedding-Based Feature Limitations
+Semantic embeddings introduce expressive power but reduce interpretability:
+
+- Embedding dimensions are not directly biologically interpretable
+- Similar textual annotations may collapse into overlapping vector representations
+- UniProt annotation bias may propagate into embedding space
+
+➡️ Embeddings should be treated as **latent representations rather than mechanistic biological variables**.
+
+---
+
+### 4. Cross-Biological Axis Ambiguity
+The biological axis scoring system provides projected functional interpretations, but:
+
+- Biological axes are not strictly independent in real systems
+- A single protein feature may contribute to multiple axes simultaneously
+- Axis scores represent **soft associations rather than discrete labels**
+
+➡️ Interpret axis outputs as **continuous association scores, not categorical classifications**.
+
+---
+
+### 5. Overall Interpretation Warning
+RedoxAxis prioritizes integration and coverage over feature orthogonality.
+
+This system is most suitable for:
+
+- exploratory analysis
+- clustering / dimensionality reduction
+- hypothesis generation
+
+and is **not designed for strict causal inference or fully disentangled mechanistic modeling**.
